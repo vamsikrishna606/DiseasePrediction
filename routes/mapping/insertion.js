@@ -1,25 +1,25 @@
-const body =require('body-parser')
-const diseases = require('../../models/diseases.js')
-const symptoms = require('../../models/symptoms.js')
 const mapping = require('../../models/mapping.js')
 const {Op,Sequelize} = require('sequelize');
 const {findDisease,findSymptoms} = require('./finding');
 
-
-
+let sym=0;
 const insertion = async (req, res) => {
-  const disid = req.body.diseaseId;
-  const symid = req.body.symptomId;
-  symid.sort(function(a, b){return a-b});
+  const diseaseId = req.body.diseaseId.trim();
+  const symptomId = req.body.symptomId.trim();
+  if(!symptomId){
+    res.status(401).send({message : "SymptomId is required!!!"})
+  }
+  
 
-dis=await findDisease(symid)
+  symptomId.sort(function(a, b){return a-b});
+
+dis=await findDisease(symptomId)
 for(i=0;i<dis.length;i++){
   const sym1 = await findSymptoms(dis[i])
   sym1.sort(function(a, b){return a-b});
-  if(isEqual(symid,sym1)){
+  if(isEqual(symptomId,sym1)){
     sym++;
     break;
-  
   }
 }
 
@@ -30,14 +30,13 @@ function isEqual(a, b)
 
        if(sym!=0){
         res.status(401).send("Not possible to insert!!!");
-       }
-        
+       } 
        else{
           symid.sort(function(a, b){return a-b});
        for (let i = 0;i<symid.length;i++){ 
-        let check = await mapping.findOne({ where : { diseasesId : disid, symptomsId : symid[i]}})
+        let check = await mapping.findOne({ where : { diseasesId : diseaseId, symptomsId : symptomId[i]}})
         if(check){
-          console.log("Already Existed....");
+          console.log("Already Existed...");
         }
         else {
         mapping.create({ diseasesId: disid, symptomsId: symid[i] })
@@ -52,11 +51,5 @@ function isEqual(a, b)
           return  res.send()
     } 
   
-
-
-
-
-
-
   }
 module.exports = {insertion};

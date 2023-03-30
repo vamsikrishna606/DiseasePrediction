@@ -5,6 +5,7 @@ const map = require('./mapping/index');
 const user =require('./users/index');
 const app=express();
 
+
 // function validateUser(req, res, next){
 //     return res.status(400).send({error:"invalid user"})
 //     return next;

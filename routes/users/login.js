@@ -1,18 +1,42 @@
 const users = require('../../models/userSignup')
-const body =require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt =require('jsonwebtoken');
+const secret = 'SenecaGlobal';
 
-const login = async (req,res) =>{
-    const username = req.body.username;
-    const password =req.body.password;
-
-    const user = await users.findOne({where : {userName : username, password : password}});
-    if(user){
-        //console.log("found");
-        res.status(200).send({token:""})
+const login = async (request,response) =>{
+try{
+    
+        const userName=request.body.userName
+        const password =request.body.password
+        if(!userName){
+            return response.status(400).send({message:"User name is required!!!"});
+        }
+        if(!password){
+            return response.status(400).send({message:"Password is required!!!"});
+        }
+        const user = await users.findOne({
+            where: { userName:userName }
+          })
+         //console.log(user.Role);
+        if(user){
+            const match = await bcrypt.compare(String(password), user.password);
+            if(match){
+                const token = jwt.sign({
+                    userName: user.userName,
+                    role:user.Role
+                }, secret);
+                return response.status(200).send({token:token})
+            }  
+           else{
+                return response.status(401).send({message:"Invalid credential!!!"});
+                }
+        }else{
+            return response.status(404).send({message:"User not found!!!"});
+        }
     }
-    else{
-        //console.log("not found");
-        res.status(404).send("not found")
+    catch(err){
+        console.log(err);
+        response.status(500).send({message : "Internel server error!!!"})
     }
 }
 

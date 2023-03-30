@@ -8,20 +8,19 @@ const {findDisease,findSymptoms} = require('./finding');
 
 let sym=0;
 const deletion =   async (request, response) => {
-  const diseaseid = request.body.diseaseId;
-  const symptomid = request.body.symptomId;
-  symptomid.sort();
+try{
+  const diseaseId = request.body.diseaseId;
+  const symptomId = request.body.symptomId;
+  symptomId.sort();
   
-      const mappings = await mapping.findAll({ where: { diseasesId: diseaseid } })
+    const mappings = await mapping.findAll({ where: { diseasesId: diseaseId } })
       
     const symptomsId =[];
     for(let i=0; i<mappings.length; i++){
       symptomsId.push(mappings[i].symptomsId);
     }
 
-      const symarray = symptomsId.filter(element => symptomid.indexOf(element) === -1);
-      //console.log(await findDisease(symarray));
-      console.log(symarray);
+    const symarray = symptomsId.filter(element => symptomId.indexOf(element) === -1);
 
 
 dis=await findDisease(symarray)
@@ -41,8 +40,8 @@ for(i=0;i<dis.length;i++){
 
       if(sym == 0){
       let DiseaseId = {
-        diseasesId : diseaseid,
-          symptomsId : symptomid
+        diseasesId : diseaseId,
+          symptomsId : symptomId
       }
         mapping.destroy({where : DiseaseId})
         .then(()=>{
@@ -54,10 +53,14 @@ for(i=0;i<dis.length;i++){
         response.status(200).send({message:"Successfully Deleted...."})
       }
       else{
-        response.status(500).send({message:"Deletion is not possible!!!!"});
+        response.status(409).send({message:"Deletion is not possible!!!!"});
       }
       return  response.send()
-
+    }
+    catch(err){
+      console.log(err);
+      response.status(500).send({message : "Internel server error!!!"})
+  }
 };
 
 module.exports = {deletion};

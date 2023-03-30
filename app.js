@@ -1,16 +1,11 @@
 const express = require('express');
-
 const sequelize = require('./db/connection');
 const routes = require('./routes/index');
 var bodyParser = require('body-parser')
-// const symptom = require("./adminoperations/symptoms/tabcreation")
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
 app.use(bodyParser.json())
-
 
 sequelize
   .authenticate()

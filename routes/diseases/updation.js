@@ -1,27 +1,34 @@
 const diseases = require('../../models/diseases.js');
 
 
-const getbyid = async (request,response) =>{
-    const diseaseId = request.body.diseaseId
-    let id= await diseases.findByPk(diseaseId)
-    return response.status(200).send(id)
-}
-
-const updation= (request,response) => {
+const updation= async (request,response) => {
+    
+try{
     const diseaseId = request.body.diseaseId;
-
-    diseases.findByPk(diseaseId)
-    .then((diseases) => {
-         diseases.diseaseName = request.body.diseaseName;
-         return diseases.save();
-    })
+    if(!diseaseId){
+        return res.status(401).send({message : "diseaseId is required!!!"})
+    }
+    diseaseName = request.body.diseaseName.trim();
+    const disease =   await diseases.findOne({ where: { diseaseName : diseaseName } })
+      if(disease){
+        return response.status(409).send({message : 'Disease already exists '});
+      }
+        const dis = await diseases.findByPk(diseaseId)
+          .then((diseases) => {
+            diseases.diseaseName = diseaseName;
+            return diseases.save();
+        })
    .then(() =>{
-    console.log("updated");
+    response.status(200).send({message : "Disease updated successfully..."})
    })
    .catch((error) => {
     console.log(error.message);
    })
-   return response.status(200).send({message : " updated successfully"});
+}
+catch(err){
+    console.log(err);
+    response.status(500).send({message : "Internel server error!!!"})
+}
 }
 
-module.exports = {updation,getbyid};
+module.exports = {updation};

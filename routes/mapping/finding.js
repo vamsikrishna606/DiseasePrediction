@@ -1,6 +1,7 @@
 const mapping = require('../../models/mapping.js')
 const diseases = require('../../models/diseases.js')
 const {Op,Sequelize} = require('sequelize');
+
  async function findDisease(symid){
 let ids=null;
 try {
@@ -17,7 +18,7 @@ try {
 
   // Extract the disease IDs from the result array
    ids = diseaseIds.map(record => record.diseasesId);
- //console.log(ids)
+ //console.log(ids)3
  return ids;
 } catch (error) {
   console.error(error);
@@ -26,27 +27,31 @@ try {
 
 }
 
-
 async function disFind(symid){
-
+let sym=0;
   dis=await findDisease(symid)
+  //console.log(dis[1])
   for(i=0;i<dis.length;i++){
+
     const sym1 = await findSymptoms(dis[i])
+    //console.log(dis[i],sym1);
     sym1.sort(function(a, b){return a-b});
     if(isEqual(symid,sym1)){
-      return dis[i];
+      sym++;
     }
   }
+  if(sym!=0){
+    return true;
+  }
+  else
+   { 
+    console.log(sym);
+    return false; }
         function isEqual(a, b)
         {
           return a.join() == b.join();
         }
 }
-
-
-
-
-
 
 
 

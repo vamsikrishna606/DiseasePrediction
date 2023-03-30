@@ -1,22 +1,26 @@
 const diseases= require('../../models/diseases.js')
 
-const deletion = async(request,response) => {
+const deletion = async(req,res) => {
   
-    const Delete =  request.body.diseaseId  
+try{
+    const diseaseId =  req.body.diseaseId.trim();  
     
     //const disease =  await diseases.findOne({ where: { diseaseId : Delete } })
-
    
     diseases.destroy({
-       where : {diseaseId :  Delete}
+       where : {diseaseId :  diseaseId}
     })
-    .then((result)=>{
-        console.log(result)
+    .then(()=>{
+        return res.status(200).send({message : "Disease deleted successfully"});
     })
     .catch((error)=>{
         console.log(error.message)
     })
-    return response.status(200).send({message : " deleted successfully"});
+}
+catch(err){
+    console.log(err);
+    res.status(500).send({message : "Internel server error!!!"})
+}
     
 }
 

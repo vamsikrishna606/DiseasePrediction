@@ -1,22 +1,22 @@
 const symptoms= require('../../models/symptoms')
-const body =require('body-parser')
 const mapping = require('../../models/mapping')
 const findDisease = require('../mapping/finding')
 
 const deletion= async (request,response)=>{
   
-    const Delete =  request.body.symptomId  
+    const symptomId =  request.body.symptomId.trim();  
+    if(!symptomId){
+      res.status(401).send({message : "SymptomId is required!!!"})
+  }
 
-    const symptom =  await symptoms.findOne({ where: { symptomId : Delete } })
+    const symptom =  await symptoms.findOne({ where: { symptomId : symptomId } })
 
-   
-//deletion in symptom
-   if(!findDisease(Delete)){
-    return response.status(200).send("not possible to delete");
+   if(!findDisease(symptomId)){
+    return response.status(200).send({message : "Not possible to delete"});
    }
    else{
      symptoms.destroy({
-       where : { symptomId : Delete }
+       where : { symptomId : symptomId }
     })
     .then((result)=>{
         console.log(result);
@@ -26,6 +26,7 @@ const deletion= async (request,response)=>{
     })
     return response.send()
   }
+  
 }
 
 module.exports ={ deletion };
