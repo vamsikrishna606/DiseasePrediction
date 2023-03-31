@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const users = require('../../models/userSignUp.js')
+const users = require('../../models/userSignUp')
 
 const changePassword= async(request,response)=>{
     const userName=request.body.userName

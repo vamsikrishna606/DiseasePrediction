@@ -10,6 +10,6 @@ const router = express.Router();
 router.post('/insert',authAdmin,insertion);
 router.get('/list',authAdmin,list);
  router.delete('/delete',authAdmin,deletion);
- router.get('/login',login);
+ router.post('/login',login);
 
 module.exports = router;

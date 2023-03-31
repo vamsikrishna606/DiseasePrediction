@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const body=require('body-parser');
-const users = require('../../models/userSignup');
+const users = require('../../models/userSignUp')
 
 const insertion= async(req,res) => {
    
@@ -10,7 +10,7 @@ try{
     const mobile = req.body.mobile
     const name =  req.body.name;
     const pwd = req.body.pwd;
-    const role= req.body.role;
+    const role = "user";
     const gender = req.body.gender;
     //console.log(uname,gender);
     if(!uname && !email && !mobile && !name && !pwd && !role && !gender)
@@ -30,7 +30,7 @@ try{
     mobileNumber : mobile,
     name : name,
     password : pass,
-    Role : role,
+    role:role,
     gender : gender
   }) 
        .then(() => {

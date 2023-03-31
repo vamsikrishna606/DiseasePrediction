@@ -7,7 +7,7 @@ try{
     if(!symptomName){
         res.status(401).send({message : "SymptomName is required!!!"})
     }
-  
+
     const symptom =  await symptoms.findOne({ where: { symptomName : symptomName } })
 
     if(symptom){

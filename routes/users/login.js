@@ -1,4 +1,4 @@
-const users = require('../../models/userSignup')
+const users = require('../../models/userSignUp')
 const bcrypt = require('bcrypt');
 const jwt =require('jsonwebtoken');
 const secret = 'SenecaGlobal';
