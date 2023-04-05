@@ -24,7 +24,7 @@ const insertion = async(req,res)=>{
         })
     }
 
-    const symid = req.body.symptomId.trim();
+    const symid = req.body.symptomId;
     if(!symid){
         res.status(401).send({message : "SymptomId is required!!!"})
     }

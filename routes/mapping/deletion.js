@@ -12,6 +12,11 @@ try{
   const diseaseId = request.body.diseaseId;
   const symptomId = request.body.symptomId;
   symptomId.sort();
+  const diseaseDeletion = await mapping.findAll({where : {diseasesId : diseaseId}})
+  if(diseaseDeletion.length ==symptomId.length){
+    diseases.destroy({where : {diseaseId : diseaseId}})
+    return response.status(200).send({message : "Diseases and Symptoms Deleted successfully"})
+  }
   
     const mappings = await mapping.findAll({ where: { diseasesId: diseaseId } })
       
@@ -36,8 +41,6 @@ for(i=0;i<dis.length;i++){
     	{
 	      return a.join() == b.join();
 	    }
-
-
       if(sym == 0){
       let DiseaseId = {
         diseasesId : diseaseId,

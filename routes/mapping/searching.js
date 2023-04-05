@@ -1,7 +1,8 @@
 const body =require('body-parser')
 const mapping = require('../../models/mapping.js')
-const find = require('./finding');
-const {findDisease,findSymptoms,disFind} = require('./finding');
+const find = require('./finding')
+const disease = require('../../models/diseases.js')
+const {findDisease,findSymptoms,disFind} = require('./finding')
 
 const diseaseSearch = async(req,res)=>{
 try{
@@ -11,7 +12,10 @@ try{
     }
     symptomId.sort(function(a, b){return a-b});
     const disid = await disFind(symptomId)
-    return res.status(200).send({message : disid});
+    const diseasename = await disease.findOne({ where : { diseaseId : disid }})
+    console.log(diseasename);
+    console.log(disid);
+    return res.status(200).send({message : diseasename});
 }
 catch(err){
     console.log(err);

@@ -4,8 +4,9 @@ const {findDisease,findSymptoms} = require('./finding');
 
 let sym=0;
 const insertion = async (req, res) => {
-  const diseaseId = req.body.diseaseId.trim();
-  const symptomId = req.body.symptomId.trim();
+  const diseaseId = req.body.diseaseId;
+  const symptomId = req.body.symptomId;
+
   if(!symptomId){
     res.status(401).send({message : "SymptomId is required!!!"})
   }
@@ -32,14 +33,14 @@ function isEqual(a, b)
         res.status(401).send("Not possible to insert!!!");
        } 
        else{
-          symid.sort(function(a, b){return a-b});
-       for (let i = 0;i<symid.length;i++){ 
+         // symid.sort(function(a, b){return a-b});
+       for (let i = 0;i<symptomId.length;i++){ 
         let check = await mapping.findOne({ where : { diseasesId : diseaseId, symptomsId : symptomId[i]}})
         if(check){
           console.log("Already Existed...");
         }
         else {
-        mapping.create({ diseasesId: disid, symptomsId: symid[i] })
+        mapping.create({ diseasesId: diseaseId, symptomsId: symptomId[i] })
             .then(()=>{
                 console.log(req.body)
             })
